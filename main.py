@@ -628,33 +628,46 @@ async def subscribers_list_handler(callback: CallbackQuery):
 
 @dp.callback_query(F.data.startswith("admin_accept:"))
 async def admin_accept_handler(callback: CallbackQuery):
-    if not is_admin(callback.from_user.id):
-        await callback.answer("No permission", show_alert=True)
-        return
-
     try:
-        _, user_id_str, days_str = callback.data.split(":")
-        user_id = int(user_id_str)
-        days = int(days_str)
-    except Exception:
-        await callback.answer("Invalid data", show_alert=True)
-        return
+        if not is_admin(callback.from_user.id):
+            await callback.answer("No permission", show_alert=True)
+            return
 
-    await set_subscription(user_id, days, ADMIN_ID, SUBSCRIPTION_PRICE)
+        try:
+            _, user_id_str, days_str = callback.data.split(":")
+            user_id = int(user_id_str)
+            days = int(days_str)
+        except Exception:
+            await callback.answer("Invalid data", show_alert=True)
+            return
 
-    try:
-        await callback.bot.send_message(
-            user_id,
-            f"✅ Your subscription has been accepted and activated for {days} days.",
-            reply_markup=back_to_menu_keyboard(),
-        )
-    except Exception:
-        pass
+        await set_subscription(user_id, days, ADMIN_ID, SUBSCRIPTION_PRICE)
 
-    await callback.message.edit_text(
-        callback.message.text + f"\n\n✅ Accepted for {days} days."
-    )
-    await callback.answer("Activated")
+        try:
+            await callback.bot.send_message(
+                user_id,
+                f"✅ Your subscription has been accepted and activated for {days} days.",
+                reply_markup=back_to_menu_keyboard(),
+            )
+        except Exception as e:
+            print(f"send_message error: {e}")
+
+        try:
+            await callback.message.edit_text(
+                callback.message.text + f"\n\n✅ Accepted for {days} days."
+            )
+        except Exception as e:
+            print(f"edit_text error: {e}")
+            await callback.message.answer(
+                f"✅ Accepted for {days} days.",
+                reply_markup=back_to_menu_keyboard(),
+            )
+
+        await callback.answer("Activated")
+
+    except Exception as e:
+        print(f"admin_accept_handler error: {e}")
+        await callback.answer("Error in accept", show_alert=True)
 
 
 @dp.callback_query(F.data.startswith("admin_reject:"))
