@@ -17,6 +17,10 @@ from aiogram.types import Message, CallbackQuery, BotCommand
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is missing")
 # =========================
 # Load env
 # =========================
