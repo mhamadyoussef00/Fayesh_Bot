@@ -15,12 +15,11 @@ from aiogram.types import Message, CallbackQuery, BotCommand
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
-<<<<<<< HEAD
+
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is missing")
-=======
 from db import (
     init_db,
     close_db,
@@ -35,8 +34,7 @@ from db import (
     update_subscription_reminder,
 )
 
->>>>>>> 56cd119 (move storage to postgres)
-# =========================
+
 # Load env
 # =========================
 load_dotenv()
