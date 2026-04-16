@@ -1,9 +1,4 @@
 aiogram
 python-dotenv
 aiohttp
-<<<<<<< HEAD
 asyncpg
-
-=======
-asyncpg
->>>>>>> 56cd119 (move storage to postgres)
